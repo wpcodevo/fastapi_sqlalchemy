@@ -1,4 +1,3 @@
-from datetime import datetime
 from . import schemas, models
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status, APIRouter, Response
@@ -34,9 +33,8 @@ def update_note(noteId: str, payload: schemas.NoteBaseSchema, db: Session = Depe
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No note with this id: {id} found')
     update_data = payload.dict(exclude_unset=True)
-    # Work Here
-    note_query.update(db_note,
-                      synchronize_session=False)
+    note_query.filter(models.Note.id == noteId).update(update_data,
+                                                       synchronize_session=False)
     db.commit()
     return {"status": "success", "note": db_note}
 
