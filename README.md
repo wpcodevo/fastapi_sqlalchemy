@@ -11,8 +11,10 @@ In this article, I'll provide you with a simple and straightforward guide on how
 - Setup FastAPI and Run the HTTP Server
 - Designing the CRUD API
 - Setup SQLAlchemy with SQLite
-    - Connect to SQLite
-    - Create Database Model with SQLAlchemy
+- Setup SQLAlchemy with PostgreSQL
+- Create Database Model with SQLAlchemy
+    - Database Model for SQLite Database
+    - Database Model for Postgres Database
 - Create Validation Schemas with Pydantic
 - Define the Path Operation Functions
     - Get All Records
