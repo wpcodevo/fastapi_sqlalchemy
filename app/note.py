@@ -10,7 +10,7 @@ router = APIRouter()
 def get_notes(db: Session = Depends(get_db), limit: int = 10, page: int = 1, search: str = ''):
     skip = (page - 1) * limit
 
-    notes = db.query(models.Note).group_by(models.Note.id).filter(
+    notes = db.query(models.Note).filter(
         models.Note.title.contains(search)).limit(limit).offset(skip).all()
     return {'status': 'success', 'results': len(notes), 'notes': notes}
 
