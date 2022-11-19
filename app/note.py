@@ -31,7 +31,7 @@ def update_note(noteId: str, payload: schemas.NoteBaseSchema, db: Session = Depe
 
     if not db_note:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No note with this id: {id} found')
+                            detail=f'No note with this id: {noteId} found')
     update_data = payload.dict(exclude_unset=True)
     note_query.filter(models.Note.id == noteId).update(update_data,
                                                        synchronize_session=False)
