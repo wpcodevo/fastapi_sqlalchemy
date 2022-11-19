@@ -36,6 +36,7 @@ def update_note(noteId: str, payload: schemas.NoteBaseSchema, db: Session = Depe
     note_query.filter(models.Note.id == noteId).update(update_data,
                                                        synchronize_session=False)
     db.commit()
+    db.refresh(db_note)
     return {"status": "success", "note": db_note}
 
 
