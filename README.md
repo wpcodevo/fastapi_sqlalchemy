@@ -1,4 +1,18 @@
 # Build a CRUD App with FastAPI and SQLAlchemy
+# backend
+have docker open
+use bash:
+
+activate virtual env: venv\Scripts\activate.bat
+
+install all missing packages
+
+uvicorn app.main:app --reload
+
+open on: http://127.0.0.1:8000/docs
+
+docker: docker-compose up -d
+
 
 In this article, I'll provide you with a simple and straightforward guide on how you can build a CRUD app with FastAPI and SQLAlchemy. The FastAPI app will run on a Starlette web server, use Pydantic for data validation, and store data in an SQLite database.
 
