@@ -35,3 +35,4 @@ urllib3 #==1.26.12
 uvicorn #==0.18.3
 watchfiles #==0.18.0
 websockets #==10.4
+typing_inspect

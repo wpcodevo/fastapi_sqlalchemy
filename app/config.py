@@ -11,9 +11,10 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_HOSTNAME: str
+    api_key: str
 
     class Config:
-        env_file = './.env'
+        env_file = '../.env'
 
 
 settings = Settings()
