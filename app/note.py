@@ -19,6 +19,23 @@ def get_notes(db: Session = Depends(get_db), limit: int = 10, page: int = 1, sea
         models.Note.title.contains(search)).limit(limit).offset(skip).all()
     return {'status': 'success', 'results': len(notes), 'notes': notes}
 
+def get_coin_id(symbol_or_name):
+    """
+    Retrieve the CoinGecko coin ID for a given symbol or name.
+    """
+    url = "https://api.coingecko.com/api/v3/coins/list"
+    response = requests.get(url)
+    if response.status_code == 200:
+        coins = response.json()
+        symbol_or_name = symbol_or_name.lower()
+        for coin in coins:
+            if coin['symbol'].lower() == symbol_or_name or coin['name'].lower() == symbol_or_name:
+                return coin['id']
+        raise HTTPException(status_code=404, detail="Coin not found")
+    else:
+        raise HTTPException(status_code=response.status_code, detail="Failed to fetch coin list from CoinGecko")
+
+
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def create_note(payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
     try:
@@ -27,11 +44,15 @@ def create_note(payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
         if not api_key:
             raise HTTPException(status_code=500, detail="API key not configured")
 
-        # Build the API URL
+        # Retrieve the CoinGecko coin ID using the payload title
+        coin_id = get_coin_id(payload.title)
+
+        # Build the API URL using the retrieved coin ID
         url = (
-            "https://api.coingecko.com/api/v3/simple/token_price/ethereum"
-            "?contract_addresses=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-            f"&vs_currencies=usd&x_cg_demo_api_key={api_key}"
+            f"https://api.coingecko.com/api/v3/simple/price"
+            f"?ids={coin_id}"
+            f"&vs_currencies=usd"
+            f"&x_cg_demo_api_key={api_key}"
         )
 
         # Make the request to get the crypto price
@@ -40,7 +61,7 @@ def create_note(payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
             raise HTTPException(status_code=response.status_code, detail="API call failed")
 
         data = response.json()
-        price = data.get("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", {}).get("usd")
+        price = data.get(coin_id, {}).get("usd")
 
         if price is None:
             raise HTTPException(status_code=500, detail="Invalid response from crypto API")
@@ -48,7 +69,7 @@ def create_note(payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
         # Create the note with the title from the payload and content as the crypto price
         new_note = models.Note(
             title=payload.title,
-            content=f"Current ETH token price (USD): {price}",
+            content=f"Current {payload.title} price (USD):\n${price}",
             category=payload.category,
             published=payload.published
         )
