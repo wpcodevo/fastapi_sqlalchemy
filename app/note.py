@@ -84,14 +84,6 @@ def create_note(payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# @router.post('/', status_code=status.HTTP_201_CREATED)
-# def create_note(payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
-#     new_note = models.Note(**payload.dict())
-#     db.add(new_note)
-#     db.commit()
-#     db.refresh(new_note)
-#     return {"status": "success", "note": new_note}
-
 
 @router.patch('/{noteId}')
 def update_note(noteId: str, payload: schemas.NoteBaseSchema, db: Session = Depends(get_db)):
