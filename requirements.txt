@@ -16,7 +16,7 @@ itsdangerous #==2.1.2
 Jinja2 #==3.1.2
 MarkupSafe #==2.1.1
 orjson #==3.8.1
-psycopg2 #==2.9.5
+psycopg2-binary #==2.9.5
 pycodestyle #==2.9.1
 pydantic #==1.10.2
 pydantic-settings ###########

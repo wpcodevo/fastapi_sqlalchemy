@@ -5,16 +5,15 @@ load_dotenv()  # Explicitly load the .env file
 
 
 class Settings(BaseSettings):
-    DATABASE_PORT: int
-    POSTGRES_PASSWORD: str
-    POSTGRES_USER: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str
     POSTGRES_HOSTNAME: str
-    api_key: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    DATABASE_PORT: int
+    API_KEY: str
 
     class Config:
-        env_file = '../.env'
+        env_file = ".env"
 
 
 settings = Settings()

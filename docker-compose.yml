@@ -1,14 +1,37 @@
-version: '3'
+version: "3.9"
+
 services:
   postgres:
-    image: postgres
+    image: postgres:14
     container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fastapi
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - '6500:5432'
-    restart: always
-    env_file:
-      - ./.env
+      - "5432:5432"
     volumes:
-      - postgres-db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+
 volumes:
-  postgres-db:
+  postgres_data:

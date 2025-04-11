@@ -1,10 +1,12 @@
 from app import models, note
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from .database import engine
+from .database import engine, get_db
 from dotenv import load_dotenv
 import os
 import requests
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import Session
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -31,6 +33,15 @@ app.include_router(note.router, tags=['Notes'], prefix='/api/notes')
 @app.get("/api/healthchecker")
 def root():
     return {"message": "Welcome to FastAPI with SQLAlchemy"}
+
+@app.get("/api/db-healthchecker")
+def db_healthchecker(db: Session = Depends(get_db)):
+    try:
+        # Attempt to execute a simple query to check database connectivity
+        db.execute("SELECT 1")
+        return {"message": "Database is healthy"}
+    except OperationalError:
+        raise HTTPException(status_code=500, detail="Database is not reachable")
 
 @app.get("/posts/{post_id}")
 async def get_post(post_id: int):
@@ -66,4 +77,4 @@ async def get_crypto_price():
             raise HTTPException(status_code=response.status_code, detail="API call failed")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))    
+        raise HTTPException(status_code=500, detail=str(e))
