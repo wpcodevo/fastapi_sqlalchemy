@@ -6,10 +6,10 @@ load_dotenv()  # Explicitly load the .env file
 
 class Settings(BaseSettings):
     POSTGRES_HOSTNAME: str
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    DATABASE_PORT: int
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = "password"
+    POSTGRES_DB: str = "fastapi"
+    DATABASE_PORT: int = 5432
     API_KEY: str
 
     class Config:
