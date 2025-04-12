@@ -8,7 +8,7 @@ class Note(Base):
     __tablename__ = 'notes'
     id = Column(GUID, primary_key=True,
                 server_default=GUID_SERVER_DEFAULT_POSTGRESQL)
-    title = Column(String, nullable=False)
+    title = Column(String, nullable=False, unique=True)
     content = Column(String, nullable=False)
     category = Column(String, nullable=True)
     published = Column(Boolean, nullable=False, server_default='True')
