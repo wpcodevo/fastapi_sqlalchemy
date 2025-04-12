@@ -4,3 +4,4 @@ venv/
 *.db
 docker-compose.yml
 Dockerfile
+Makefile1
